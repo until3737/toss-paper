@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회의 시간 설계 — 프로젝트 가이드</title>
+<style>
+@font-face{
+  font-family:'Pretendard Variable';
+  font-weight:45 920;
+  font-style:normal;
+  font-display:swap;
+  src:local('Pretendard Variable'),url('fonts/PretendardVariable.woff2') format('woff2-variations');
+}
+:root{
+  --blue:#0064FF;
+  --blue-light:#E8F1FF;
+  --blue-dark:#0050C9;
+  --navy:#191F28;
+  --gray-900:#333D4B;
+  --gray-700:#4E5968;
+  --gray-500:#8B95A1;
+  --gray-300:#D1D6DB;
+  --gray-100:#F2F4F6;
+  --gray-50:#F9FAFB;
+  --green:#00A661;
+  --green-light:#E6F6EF;
+  --amber:#F59F00;
+  --amber-light:#FFF6E0;
+  --red:#F04452;
+  --red-light:#FDEDEE;
+  --sidebar-w:280px;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  color:var(--navy);background:#fff;line-height:1.7;word-break:keep-all;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--blue-light)}
+a{color:inherit;text-decoration:none}
+
+/* ================= 사이드바 ================= */
+#sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  border-right:1px solid var(--gray-100);background:#fff;
+  display:flex;flex-direction:column;z-index:50;
+}
+#sidebar .brand{
+  padding:32px 28px 24px;
+}
+#sidebar .brand .logo{
+  display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;letter-spacing:-.01em;
+}
+#sidebar .brand .logo .mark{
+  width:28px;height:28px;border-radius:9px;background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex:none;
+}
+#sidebar .brand .sub{font-size:12.5px;color:var(--gray-500);margin-top:8px;line-height:1.5}
+#sidebar nav{flex:1;overflow-y:auto;padding:8px 16px 24px}
+#sidebar nav::-webkit-scrollbar{width:4px}
+#sidebar nav::-webkit-scrollbar-thumb{background:var(--gray-100);border-radius:4px}
+.nav-group{margin-top:20px}
+.nav-group .label{
+  font-size:11.5px;font-weight:600;color:var(--gray-500);letter-spacing:.08em;
+  padding:0 12px;margin-bottom:6px;
+}
+.nav-item{
+  display:block;padding:8px 12px;border-radius:9px;font-size:14.5px;font-weight:400;
+  color:var(--gray-700);transition:background .15s,color .15s;
+  position:relative;cursor:pointer;
+}
+.nav-item:hover{background:var(--gray-50);color:var(--navy)}
+.nav-item.active{color:var(--navy);font-weight:600}
+#sidebar .foot{
+  padding:20px 28px;border-top:1px solid var(--gray-100);
+}
+#sidebar .foot a{
+  display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--blue);
+}
+#sidebar .foot a:hover{color:var(--blue-dark)}
+#sidebar .foot .note{font-size:11.5px;color:var(--gray-500);margin-top:6px}
+
+/* 모바일 상단바 */
+#mobilebar{
+  display:none;position:fixed;top:0;left:0;right:0;height:56px;z-index:60;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--gray-100);
+  align-items:center;justify-content:space-between;padding:0 20px;
+}
+#mobilebar .logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+#mobilebar .logo .mark{
+  width:24px;height:24px;border-radius:7px;background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
+}
+#menuBtn{
+  border:1px solid var(--gray-300);background:#fff;border-radius:9px;
+  padding:7px 14px;font-size:13.5px;font-weight:600;color:var(--gray-900);
+  font-family:inherit;cursor:pointer;
+}
+@media (max-width:960px){
+  #sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:none}
+  #sidebar.open{transform:none;box-shadow:0 0 60px rgba(0,0,0,.15)}
+  #mobilebar{display:flex}
+}
+
+/* ================= 콘텐츠 ================= */
+#content{
+  margin-left:var(--sidebar-w);
+  padding:0 clamp(28px,6vw,96px) 120px clamp(48px,8vw,128px);
+}
+@media (max-width:960px){
+  #content{margin-left:0;padding-top:56px}
+}
+.doc{max-width:760px}
+section.doc-sec{padding-top:96px}
+section.doc-sec + section.doc-sec{margin-top:40px;border-top:1px solid var(--gray-100)}
+.kicker{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.06em;margin-bottom:12px}
+h1{font-size:clamp(30px,4vw,42px);font-weight:600;line-height:1.3;letter-spacing:-.02em}
+h2{font-size:clamp(24px,3vw,32px);font-weight:600;line-height:1.35;letter-spacing:-.02em;margin-bottom:20px}
+h3{font-size:19px;font-weight:600;margin:44px 0 12px;letter-spacing:-.01em}
+p{font-size:16px;color:var(--gray-900);margin-bottom:16px}
+p.dim{color:var(--gray-700)}
+strong,b{font-weight:600;color:var(--navy)}
+.hero-desc{font-size:17.5px;color:var(--gray-700);margin-top:20px}
+.tagbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.tag{
+  font-size:13.5px;font-weight:600;border:1px solid var(--gray-300);border-radius:999px;
+  padding:7px 15px;color:var(--gray-900);background:#fff;
+}
+.tag b{color:var(--blue)}
+
+/* 콜아웃 */
+.callout{
+  background:var(--blue-light);border-radius:var(--radius);padding:24px 28px;margin:28px 0;
+}
+.callout .ct{font-size:12.5px;font-weight:600;color:var(--blue);letter-spacing:.06em;margin-bottom:8px}
+.callout p{margin:0;font-size:15.5px;line-height:1.75}
+.callout.dark{background:var(--navy)}
+.callout.dark .ct{color:#7AA9FF}
+.callout.dark p{color:rgba(255,255,255,.92)}
+.callout.dark p em{font-style:normal;color:#7AA9FF;font-weight:600}
+
+/* 표 */
+.tbl{overflow-x:auto;border:1px solid var(--gray-100);border-radius:var(--radius);margin:24px 0}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--gray-100);vertical-align:top}
+th{background:var(--gray-50);font-size:13px;color:var(--gray-500);font-weight:600;white-space:nowrap}
+td:first-child{font-weight:600;white-space:nowrap}
+td.diff{color:var(--blue-dark);font-weight:600}
+tr:last-child td{border-bottom:none}
+
+/* 카드 그리드 */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+@media (max-width:680px){.cards{grid-template-columns:1fr}}
+.card{
+  border:1px solid var(--gray-100);border-radius:var(--radius);padding:22px;background:var(--gray-50);
+}
+.card .no{font-size:12.5px;font-weight:600;color:var(--blue)}
+.card h4{font-size:16.5px;font-weight:600;margin:6px 0 6px}
+.card p{font-size:14px;color:var(--gray-700);margin:0}
+.card .kind{font-size:12px;font-weight:600;border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:10px}
+.kind.core{background:var(--blue-light);color:var(--blue-dark)}
+.kind.guard{background:var(--amber-light);color:#B47800}
+.kind.ok{background:var(--green-light);color:var(--green)}
+.kind.warn{background:var(--amber-light);color:#B47800}
+.kind.out{background:var(--gray-100);color:var(--gray-500)}
+
+/* 조건 세 종류 칩 */
+.cond-row{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.cond{
+  border-radius:999px;padding:9px 18px;font-size:14px;font-weight:600;border:1px solid transparent;
+}
+.cond.na{background:var(--red-light);color:var(--red)}
+.cond.pref{background:var(--amber-light);color:#B47800}
+.cond.role{background:var(--blue-light);color:var(--blue-dark)}
+
+/* 말풍선 해석 */
+.ambig{margin:28px 0}
+.ambig .say{
+  display:inline-block;background:var(--navy);color:#fff;border-radius:18px 18px 18px 4px;
+  padding:14px 22px;font-size:16.5px;font-weight:600;
+}
+.ambig .interp{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+@media (max-width:680px){.ambig .interp{grid-template-columns:1fr}}
+.interp .case{border:1px solid var(--gray-100);border-radius:12px;padding:16px;background:#fff}
+.case .k{font-size:12px;font-weight:600;letter-spacing:.04em}
+.case.na .k{color:var(--red)}.case.pref .k{color:#B47800}.case.role .k{color:var(--blue)}
+.case p{font-size:13.5px;color:var(--gray-700);margin:6px 0 0}
+
+/* 플로우 스텝 */
+.steps{display:flex;flex-direction:column;gap:14px;margin:24px 0}
+.fstep{
+  display:flex;gap:16px;border:1px solid var(--gray-100);border-radius:var(--radius);
+  padding:20px 22px;background:#fff;
+}
+.fstep .n{
+  flex:none;width:30px;height:30px;border-radius:9px;background:var(--blue);color:#fff;
+  font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;
+}
+.fstep h4{font-size:16px;font-weight:600;margin-bottom:4px}
+.fstep p{font-size:14px;color:var(--gray-700);margin:0}
+
+/* 후보 카드 예시 */
+.cand-list{display:flex;flex-direction:column;gap:10px;margin:24px 0;max-width:520px}
+.cand{border:1.5px solid var(--gray-100);border-radius:12px;padding:14px 16px;background:#fff}
+.cand.best{border-color:var(--blue);box-shadow:0 4px 16px rgba(0,100,255,.12)}
+.cand .time{font-size:15px;font-weight:600}
+.cand .stat{font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
+.stat b{font-weight:600;border-radius:6px;padding:2.5px 8px}
+.stat .ok{background:var(--green-light);color:var(--green)}
+.stat .warn{background:var(--amber-light);color:#B47800}
+.stat .bad{background:var(--red-light);color:var(--red)}
+
+/* 매핑 행 */
+.map-list{display:flex;flex-direction:column;gap:10px;margin:24px 0}
+.map-row{
+  display:grid;grid-template-columns:1fr 36px 1fr;gap:10px;align-items:center;
+  background:var(--gray-50);border:1px solid var(--gray-100);border-radius:12px;padding:16px 20px;
+}
+@media (max-width:680px){
+  .map-row{grid-template-columns:1fr;gap:6px}
+  .map-row .arr{transform:rotate(90deg);justify-self:start}
+}
+.map-row .from{font-size:14px;color:var(--gray-700)}
+.map-row .arr{color:var(--blue);font-weight:600;text-align:center}
+.map-row .to{font-size:14px;font-weight:600}
+
+/* 인용 말풍선 */
+.quote{
+  border-left:3px solid var(--blue);padding:4px 0 4px 18px;margin:20px 0;
+}
+.quote p{font-size:15.5px;font-weight:600;color:var(--gray-900);margin:0}
+.quote .who{font-size:12.5px;color:var(--gray-500);font-weight:600;margin-top:4px;display:block}
+
+.footer{
+  margin-top:120px;padding-top:32px;border-top:1px solid var(--gray-100);
+  font-size:13px;color:var(--gray-500);
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 모바일 상단바 ============ -->
+<div id="mobilebar">
+  <span class="logo"><span class="mark">M</span>회의 시간 설계</span>
+  <button id="menuBtn" type="button">목차</button>
+</div>
+
+<!-- ============ 사이드바 ============ -->
+<aside id="sidebar">
+  <div class="brand">
+    <div class="logo"><span class="mark">M</span>회의 시간 설계</div>
+    <div class="sub">6명의 동료가 1시간 회의 일정을<br>잡는 경험 설계 — 프로젝트 가이드</div>
+  </div>
+  <nav id="toc">
+    <div class="nav-group">
+      <div class="label">개요</div>
+      <a class="nav-item" href="#intro">프로젝트 소개</a>
+      <a class="nav-item" href="#context">과제 상황</a>
+    </div>
+    <div class="nav-group">
+      <div class="label">문제</div>
+      <a class="nav-item" href="#users">사용자</a>
+      <a class="nav-item" href="#problem">문제 정의</a>
+      <a class="nav-item" href="#rootcause">Root Cause</a>
+      <a class="nav-item" href="#research">리서치</a>
+    </div>
+    <div class="nav-group">
+      <div class="label">해결</div>
+      <a class="nav-item" href="#hypothesis">가설</a>
+      <a class="nav-item" href="#principles">설계 원칙</a>
+      <a class="nav-item" href="#flow">핵심 플로우</a>
+      <a class="nav-item" href="#features">주요 기능</a>
+    </div>
+    <div class="nav-group">
+      <div class="label">설계 이유</div>
+      <a class="nav-item" href="#mapping">문제와 설계의 연결</a>
+      <a class="nav-item" href="#comparison">기존 서비스와의 차이</a>
+      <a class="nav-item" href="#alternatives">검토한 대안</a>
+      <a class="nav-item" href="#metrics">성공 지표</a>
+    </div>
+    <div class="nav-group">
+      <div class="label">마무리</div>
+      <a class="nav-item" href="#scope">범위와 확장성</a>
+      <a class="nav-item" href="#summary">최종 요약</a>
+    </div>
+  </nav>
+  <div class="foot">
+    <a href="index.html">스크롤텔링 버전 보기 →</a>
+    <div class="note">인터랙티브 데모가 포함된 버전</div>
+  </div>
+</aside>
+
+<!-- ============ 콘텐츠 ============ -->
+<main id="content">
+  <div class="doc">
+
+    <section class="doc-sec" id="intro">
+      <div class="kicker">PROJECT GUIDE</div>
+      <h1>모두 비어 있는 시간이 아니라,<br>충분히 괜찮은 시간을 찾는 경험</h1>
+      <p class="hero-desc">6명의 동료가 다음 주 안에 1시간 회의를 잡아야 합니다. 캘린더의 빈 시간을 찾는 것만으로는 부족했습니다. 이 문서는 그 이유를 발견하고, 구조로 해결한 과정의 기록입니다.</p>
+      <div class="tagbar">
+        <span class="tag">👥 <b>6명</b>의 동료</span>
+        <span class="tag">⏱ <b>1시간</b> 회의</span>
+        <span class="tag">📅 기한 <b>다음 주</b></span>
+        <span class="tag">⚖️ 필수 + 선택 참석자</span>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="context">
+      <div class="kicker">개요</div>
+      <h2>과제 상황</h2>
+      <p>같은 회사 동료 6명이 다음 주까지 1시간 회의로 모여야 합니다. 참석자에는 필수와 선택이 섞여 있고, 점심 직후 회피·특정 요일 외근 같은 개인별 일정 조건이 존재합니다.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>항목</th><th>내용</th></tr></thead>
+          <tbody>
+            <tr><td>관계</td><td>같은 회사 동료</td></tr>
+            <tr><td>인원</td><td>6명</td></tr>
+            <tr><td>기한</td><td>다음 주까지 모여야 함</td></tr>
+            <tr><td>회의 길이</td><td>1시간 — 30분보다 연속 블록을 찾기 어려움</td></tr>
+            <tr><td>참석 조건</td><td>필수 참석자와 선택 참석자가 함께 있음</td></tr>
+            <tr><td>개인 조건</td><td>점심 직후 회피, 특정 요일 외근 등</td></tr>
+            <tr><td>목표</td><td>동료들의 상황을 이해하고, 모두에게 괜찮은 시간으로 회의를 확정</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="users">
+      <div class="kicker">문제</div>
+      <h2>사용자</h2>
+      <p>이 과제의 primary user는 <strong>회의 시간을 확정해야 하는 주최자</strong>입니다. 다만 회의 시간이 ‘괜찮은지’는 참석자의 상황에 영향을 받으므로, 참석자는 affected user로 보았습니다.</p>
+      <div class="cards">
+        <div class="card"><span class="no">PRIMARY USER</span><h4>주최자</h4><p>회의 시간을 정하고 초대하는 사람. 다음 주 안에 1시간 회의를 확정해야 합니다.</p></div>
+        <div class="card"><span class="no">AFFECTED USER</span><h4>참석자</h4><p>회의에 참여하거나 응답하는 사람. 자신의 일정 조건 안에서 회의에 참여합니다.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="problem">
+      <div class="kicker">문제</div>
+      <h2>문제 정의</h2>
+      <p>주최자는 회의 시간을 정하려면 여섯 사람의 사정을 모두 알아야 합니다. 그런데 이 사정들은 성격이 제각각입니다. 외근처럼 아예 안 되는 조건이 있고, 점심 직후처럼 가능은 하지만 피하고 싶은 조건이 있으며, 필수와 선택이라는 역할 차이까지 겹칩니다.</p>
+      <p>주최자는 흩어진 조건을 한 명씩 모으고, 성격이 다른 조건들을 머릿속에서 절충해 하나의 시간으로 좁힙니다. 조건이 하나라도 뒤늦게 바뀌면, 이 절충을 <strong>처음부터 다시</strong> 합니다.</p>
+      <div class="callout dark">
+        <div class="ct">문제 정의</div>
+        <p>6명이 다음 주 안에 1시간 회의를 잡아야 할 때, 참석자마다 <em>필수 여부</em>와 <em>일정 조건의 중요도</em>가 달라 — 단순히 모두가 비어 있는 시간만으로는 <em>충분히 괜찮은 시간</em>을 판단하기 어렵다.</p>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="rootcause">
+      <div class="kicker">문제</div>
+      <h2>Root Cause</h2>
+      <p>참석자의 조건은 세 종류로 섞여 있습니다.</p>
+      <div class="cond-row">
+        <span class="cond na">확정 불가 — 외근</span>
+        <span class="cond pref">선호 — 점심 직후 회피</span>
+        <span class="cond role">역할 — 필수·선택 참석</span>
+      </div>
+      <p>세 종류는 같은 방식으로 다룰 수 없는데, 조건이 전달되는 경로 — 구두, 메신저, 캘린더 — 는 이 구분을 담지 못합니다.</p>
+      <div class="ambig">
+        <div class="say">“화요일 오후는 어려워요.”</div>
+        <div class="interp">
+          <div class="case na"><span class="k">확정 불가?</span><p>외근이라 아예 안 되는 걸 수도 있습니다. 그렇다면 후보에서 빠져야 합니다.</p></div>
+          <div class="case pref"><span class="k">선호?</span><p>가능은 하지만 피하고 싶은 걸 수도 있습니다. 꼭 필요하면 감수할 수 있습니다.</p></div>
+          <div class="case role"><span class="k">누가 말했나?</span><p>말한 사람이 필수인지 선택인지에 따라, 같은 문장의 무게가 달라집니다.</p></div>
+        </div>
+      </div>
+      <p>같은 한 문장이 구분에 따라 전혀 다른 의미가 되지만, 전달 과정에서 이 구분은 기록에서 누락됩니다. 결국 주최자는 절충에 필요한 판단을 <strong>자신의 기억과 해석에만 의존해</strong> 내립니다.</p>
+      <div class="callout">
+        <div class="ct">핵심</div>
+        <p>핵심은 빈 시간을 못 찾는 것이 아닙니다. <strong>조건의 성격과 무게가 전달 과정에서 사라져, 절충이 주최자 한 사람의 부담으로 남는 것</strong>입니다.</p>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="research">
+      <div class="kicker">문제</div>
+      <h2>리서치</h2>
+      <h3>시장은 이 문제를 부분씩만 다룹니다</h3>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>서비스</th><th>강한 범위</th><th>이번 상황에서 제한적인 지점</th></tr></thead>
+          <tbody>
+            <tr><td>Outlook<br>Scheduling Assistant</td><td>필참·선택을 구분해 필참자 기준으로 빈 시간 탐색</td><td>캘린더에 등록된 일정만 읽어, 선호나 유동적 외근은 반영하기 어렵다</td></tr>
+            <tr><td>Doodle 그룹 폴</td><td>후보 시간별 조건부 응답 수집</td><td>응답자 사이의 무게 차이를 두지 않는다</td></tr>
+            <tr><td>Reclaim</td><td>개인의 반복 선호를 등록해 회의 배치 시 자동 회피</td><td>그 선호가 회의별 역할(필참·선택)과 이어지지 않는다</td></tr>
+            <tr><td>Google Calendar<br>예약 페이지</td><td>호스트 1명의 선호·가용 시간 설정</td><td>호스트 대 다수 구조라, 6명이 대등하게 조건을 내는 상황과 맞지 않는다</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>각 도구는 저마다의 범위에 강할 뿐, <strong>세 종류의 조건을 한 회의 안에서 함께 다루는 도구</strong>는 확인되지 않았습니다.</p>
+      <h3>사용자에게 예상되는 목소리</h3>
+      <div class="quote"><p>“6명을 다 초대하지만, 실제로 꼭 필요한 사람은 2~3명인 경우가 많아요.”</p><span class="who">주최자 — 참석자 중요도가 다르다</span></div>
+      <div class="quote"><p>“점심 직후는 피하고 싶지만, 꼭 필요한 회의면 들어가긴 해요.”</p><span class="who">참석자 — 선호 조건 ≠ 필수 조건</span></div>
+      <div class="quote"><p>“외근 있는 날은 캘린더가 비어 있어도 회의 잡히면 애매해요.”</p><span class="who">참석자 — 가능하지만 덜 적절한 시간이 있다</span></div>
+      <div class="quote"><p>“30분이면 어떻게든 되는데, 1시간은 다 같이 맞추기가 확실히 어려워요.”</p><span class="who">주최자 — 1시간 회의는 후보를 줄인다</span></div>
+    </section>
+
+    <section class="doc-sec" id="hypothesis">
+      <div class="kicker">해결</div>
+      <h2>가설</h2>
+      <div class="callout">
+        <div class="ct">가설</div>
+        <p>참석자가 자기 조건을 <strong>성격대로</strong>(불가·선호) 입력하고 주최자가 <strong>역할</strong>(필수·선택)을 지정하면, 시스템은 절충의 <strong>대가가 드러난 후보 시간</strong>을 제시할 수 있고 — 주최자는 조건을 다시 묻지 않고 회의를 확정할 수 있다.</p>
+      </div>
+      <p>해결 방향을 한 문장으로 요약하면 이렇습니다 — <strong>조건은 성격대로 받고, 후보는 대가와 함께 보여준다.</strong></p>
+    </section>
+
+    <section class="doc-sec" id="principles">
+      <div class="kicker">해결</div>
+      <h2>설계 원칙</h2>
+      <div class="cards">
+        <div class="card"><span class="no">원칙 1</span><h4>빈 시간보다 회의 맥락을 우선한다</h4><p>모두가 비어 있는 시간뿐 아니라 필수/선택 참석자와 개인 일정 조건을 함께 고려합니다.</p></div>
+        <div class="card"><span class="no">원칙 2</span><h4>입력 부담을 키우지 않는다</h4><p>연동한 캘린더로 일정을 미리 채워, 참석자의 입력을 ‘확인’ 수준까지 낮춥니다. 사유는 받지 않습니다.</p></div>
+        <div class="card"><span class="no">원칙 3</span><h4>완벽한 시간보다 충분히 괜찮은 시간</h4><p>다음 주라는 기한 안에서 현실적으로 회의를 성사시키는 데 집중합니다.</p></div>
+        <div class="card"><span class="no">원칙 4</span><h4>최종 결정은 주최자가 한다</h4><p>자동 확정보다, 주최자가 상황을 이해하고 확정할 수 있는 흐름을 만듭니다.</p></div>
+        <div class="card"><span class="no">원칙 5</span><h4>참석자 조건은 판단의 재료다</h4><p>모든 선호를 반드시 만족시키기보다, 시간 선택에 영향을 주는 정보로 다룹니다.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="flow">
+      <div class="kicker">해결</div>
+      <h2>핵심 플로우</h2>
+      <p>조건은 성격대로 받고(수집), 후보는 대가와 함께 보여주고(생성), 이해한 상태에서 확정합니다(확정).</p>
+      <div class="steps">
+        <div class="fstep"><span class="n">1</span><div><h4>회의 생성</h4><p>주최자가 제목, 기간(다음 주), 길이(1시간), 참석자 6명을 입력하고 필수·선택 역할을 지정합니다. 이미 아는 조건은 미리 칠해 보냅니다.</p></div></div>
+        <div class="fstep"><span class="n">2</span><div><h4>참석자 조건 수집</h4><p>참석자에게 링크를 보내면 연동된 캘린더 일정이 회색(불가)으로 미리 채워져 있습니다. 확인·보정하고, 피하고 싶은 시간을 노랑(회피)으로 추가하기만 하면 됩니다. 사유는 묻지 않습니다.</p></div></div>
+        <div class="fstep"><span class="n">3</span><div><h4>후보 생성</h4><p>필수 참석자의 불가 시간을 제외한 구간에서 1시간 후보를 추리고, 후보마다 대가를 붙여 가장 적게 양보하는 순으로 정렬합니다. 완벽한 시간이 없어도 후보를 숨기지 않습니다.</p></div></div>
+        <div class="fstep"><span class="n">4</span><div><h4>후보 비교</h4><p>각 후보가 어떤 조건을 만족하고 무엇을 감수하는지 비교합니다. 주최자는 트레이드오프를 이해한 상태에서 선택합니다.</p></div></div>
+        <div class="fstep"><span class="n">5</span><div><h4>확정</h4><p>초대가 전원에게 발송되고, 조건을 양보한 참석자에게는 ‘대안이 없어 정해졌다’는 맥락이 함께 전달됩니다. 필수 참석자가 미응답인 후보만은 확정 전 재확인을 요구합니다.</p></div></div>
+      </div>
+      <h3>후보 목록 예시</h3>
+      <div class="cand-list">
+        <div class="cand best"><div class="time">화요일 10:00 – 11:00</div><div class="stat"><b class="ok">필수 3명 전원 가능</b><b class="warn">선택 1명 불가</b></div></div>
+        <div class="cand"><div class="time">수요일 13:00 – 14:00</div><div class="stat"><b class="ok">전원 가능</b><b class="warn">점심 직후 회피 포함</b></div></div>
+        <div class="cand"><div class="time">목요일 15:00 – 16:00</div><div class="stat"><b class="ok">전원 가능</b><b class="bad">필수 1명 외근 인접</b></div></div>
+        <div class="cand"><div class="time">금요일 11:00 – 12:00</div><div class="stat"><b class="ok">필수 3명 전원 가능</b><b class="warn">1명 미응답 · 캘린더 기준</b></div></div>
+      </div>
+      <p class="dim">모두 비어 있는 수요일 13시보다, 선택 참석자 한 명이 빠지는 화요일 10시가 더 나은 후보일 수 있습니다 — ‘빈 시간’과 ‘괜찮은 시간’은 다르기 때문입니다.</p>
+    </section>
+
+    <section class="doc-sec" id="features">
+      <div class="kicker">해결</div>
+      <h2>주요 기능</h2>
+      <div class="cards">
+        <div class="card"><span class="no">기능 1</span><h4>참석자 중요도 구분</h4><p>필수와 선택을 구분합니다. 같은 시간대라도 누가 꼭 필요한지에 따라 회의의 적절성이 달라집니다.</p></div>
+        <div class="card"><span class="no">기능 2</span><h4>불가와 선호, 두 색의 조건 입력</h4><p>불가(회색)는 캘린더 연동으로 미리 채워지고, 회피 시간(노랑)만 직접 추가합니다. 사유는 받지 않아 민감한 사정을 노출하지 않습니다.</p></div>
+        <div class="card"><span class="no">기능 3</span><h4>대가가 붙은 후보 목록</h4><p>후보마다 무엇을 양보해야 하는지 표시하고, 가장 적게 양보하는 순으로 정렬합니다.</p></div>
+        <div class="card"><span class="no">기능 4</span><h4>후보별 조건 요약</h4><p>필수/선택 참석 가능 여부, 개인 조건, 미응답 여부, 기한 적합성을 후보별로 요약합니다.</p></div>
+        <div class="card"><span class="no">기능 5</span><h4>맥락과 함께하는 확정</h4><p>확정 시 조건을 양보한 참석자에게 맥락을 함께 전하고, 필수 참석자 미응답 후보는 재확인을 거칩니다.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="mapping">
+      <div class="kicker">설계 이유</div>
+      <h2>문제와 설계의 연결</h2>
+      <p>모든 설계 결정은 Root Cause — 조건의 구분이 전달 과정에서 사라진다 — 와 직접 맞물립니다.</p>
+      <div class="map-list">
+        <div class="map-row"><span class="from">조건의 구분이 전달 과정에서 사라진다</span><span class="arr">→</span><span class="to">입력 단계에서 구분을 구조로 보존 — 불가·선호 두 색, 역할 지정</span></div>
+        <div class="map-row"><span class="from">절충의 기준은 주최자에게 있다</span><span class="arr">→</span><span class="to">시스템은 결정을 대신하지 않고, 각 후보의 대가를 드러내는 데서 멈춘다</span></div>
+        <div class="map-row"><span class="from">참석자의 응답이 이 구조의 전제다</span><span class="arr">→</span><span class="to">캘린더 미리 채움으로 입력을 ‘확인’ 수준까지 낮춘다</span></div>
+        <div class="map-row"><span class="from">미응답이 계산을 막을 수 있다</span><span class="arr">→</span><span class="to">미응답도 후보를 막는 대신 ‘대가의 한 종류’로 흡수한다</span></div>
+        <div class="map-row"><span class="from">민감한 사정은 말하기 어렵다</span><span class="arr">→</span><span class="to">사유는 받지 않는다 — 불가·선호라는 결과만 남긴다</span></div>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="comparison">
+      <div class="kicker">설계 이유</div>
+      <h2>기존 서비스와의 차이</h2>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>기존 서비스</th><th>이번 상황의 한계</th><th>본 설계의 방향</th></tr></thead>
+          <tbody>
+            <tr><td>Outlook<br>Scheduling Assistant</td><td>캘린더 밖의 조건(선호, 유동적 외근)을 읽지 못함</td><td class="diff">캘린더 밖의 조건까지 구조로 수집</td></tr>
+            <tr><td>Doodle 그룹 폴</td><td>응답자 사이의 무게 차이가 없음</td><td class="diff">역할(필수·선택)로 응답의 무게를 구분</td></tr>
+            <tr><td>Reclaim</td><td>선호가 회의별 역할과 이어지지 않음</td><td class="diff">선호를 회의의 ‘대가’ 계산에 연결</td></tr>
+            <tr><td>Google Calendar<br>예약 페이지</td><td>호스트 대 다수 구조</td><td class="diff">6명이 대등하게 조건을 내는 구조</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="alternatives">
+      <div class="kicker">설계 이유</div>
+      <h2>검토한 대안</h2>
+      <p>이 구조에 도달하기까지 세 가지 대안을 검토하고 내려놓았습니다.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>검토한 대안</th><th>택하지 않은 이유</th></tr></thead>
+          <tbody>
+            <tr><td>캘린더 겹쳐보기 강화<br><span style="font-weight:400;color:var(--gray-500)">(Find a Time류)</span></td><td>캘린더 밖의 조건(유동적 외근, 선호)을 읽지 못해, 조건 구분이 누락되는 원인이 그대로 남는다</td></tr>
+            <tr><td>투표 방식 개선<br><span style="font-weight:400;color:var(--gray-500)">(Doodle류)</span></td><td>후보를 먼저 던지는 구조라, 후보에 없는 시간대의 선호를 담지 못하고 응답자 간 무게 차이도 없다</td></tr>
+            <tr><td>전자동 확정</td><td>“선택 참석자의 불가 vs 필수 참석자의 선호 양보” 중 무엇을 우선할지는 회의 목적에 따라 달라지는 판단이라, 시스템이 대신 정할 근거가 없다</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <div class="ct">그래서, 시스템은 여기서 멈춥니다</div>
+        <p>결정을 대신하지 않고 각 후보의 ‘대가’를 드러내는 것까지. 절충의 기준은 회의 목적을 아는 주최자에게 남깁니다.</p>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="metrics">
+      <div class="kicker">설계 이유</div>
+      <h2>성공 지표</h2>
+      <p>모든 지표는 Root Cause — ‘절충이 주최자 한 사람의 부담으로 남는다’ — 와 연결됩니다.</p>
+      <div class="cards">
+        <div class="card"><span class="kind core">핵심 지표</span><h4>회의 확정까지 걸린 시간</h4><p>절충 부담이 줄면 짧아집니다.</p></div>
+        <div class="card"><span class="kind core">핵심 지표</span><h4>주최자가 조건을 다시 물은 횟수</h4><p>조건 누락이 사라지면 0에 가까워집니다.</p></div>
+        <div class="card"><span class="kind guard">가드레일</span><h4>확정 후 재조정한 횟수</h4><p>조건이 뒤늦게 나와 재조정하는 일이 없는지 — 미리 채움과 재계산이 제 역할을 하는지 확인합니다.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="scope">
+      <div class="kicker">마무리</div>
+      <h2>범위와 확장성</h2>
+      <p>이번 과제는 <strong>6명이 다음 주에 한 번 모이는 회의</strong>로 범위를 한정했습니다. 인접해 보이는 상황들도 검토했지만, 문제의 성격이 달라 범위 밖에 두었습니다.</p>
+      <div class="cards">
+        <div class="card"><span class="kind ok">구조 재사용 가능</span><h4>점심 약속</h4><p>이번 설계의 선호(회피) 구조를 그대로 쓸 수 있습니다. 가장 가까운 확장 지점입니다.</p></div>
+        <div class="card"><span class="kind warn">재검토 필요</span><h4>회식</h4><p>필수·선택의 무게가 뒤집힙니다 — 전원 참석 자체가 목적이라, 역할 지정 로직의 재검토가 필요합니다.</p></div>
+        <div class="card"><span class="kind out">이번 범위 밖</span><h4>그룹 (반복 모임)</h4><p>반복이 확인되기 전에 조건을 프로필로 상시화하면 오히려 첫 입력 부담만 키웁니다. 구성원이 고정적으로 자주 모이는지 확인된 뒤에 도입 가치가 생깁니다.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-sec" id="summary">
+      <div class="kicker">마무리</div>
+      <h2>최종 요약</h2>
+      <div class="callout dark">
+        <div class="ct">문제</div>
+        <p>참석자의 조건은 확정 불가·선호·역할, 세 종류로 섞여 있지만 전달 경로는 이 구분을 담지 못한다. 조건의 성격과 무게가 전달 과정에서 사라져, <em>절충이 주최자 한 사람의 부담으로 남는다.</em></p>
+      </div>
+      <div class="callout dark">
+        <div class="ct">해결</div>
+        <p>조건은 성격대로 받아 구조로 보존하고 — 불가·선호 두 색, 역할 지정 — 후보마다 절충의 대가를 드러낸다. 주최자는 조건을 다시 묻지 않고, <em>이해한 상태에서 회의를 확정한다.</em></p>
+      </div>
+      <div class="callout dark">
+        <div class="ct">설계 이유</div>
+        <p>절충의 기준은 회의 목적을 아는 주최자에게 있다. 그래서 시스템은 결정을 대신하지 않고, <em>각 후보의 대가를 드러내는 데서 멈춘다.</em> 입력은 캘린더 미리 채움으로 ‘확인’ 수준까지 낮췄다.</p>
+      </div>
+      <div class="footer">6명의 동료가 1시간 회의 일정을 잡는 경험 설계 — Product Design Case Study</div>
+    </section>
+
+  </div>
+</main>
+
+<script>
+(function(){
+  const sidebar = document.getElementById('sidebar');
+  const links = [...document.querySelectorAll('.nav-item')];
+  const map = {};
+  links.forEach(a=>{ map[a.getAttribute('href').slice(1)] = a; });
+
+  function setActive(link){
+    links.forEach(a=>a.classList.remove('active'));
+    link?.classList.add('active');
+  }
+
+  /* 클릭 시 해당 섹션으로 이동 */
+  let clickLock = 0;
+  links.forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      const id = a.getAttribute('href').slice(1);
+      const sec = document.getElementById(id);
+      if(!sec) return;
+      setActive(a);
+      clickLock = Date.now() + 800; // 스크롤 이동 중 스파이가 덮어쓰지 않도록
+      sec.scrollIntoView({behavior:'smooth', block:'start'});
+      history.replaceState(null, '', '#'+id);
+      sidebar.classList.remove('open');
+    });
+  });
+
+  /* 스크롤스파이 */
+  const io = new IntersectionObserver(entries=>{
+    if(Date.now() < clickLock) return;
+    entries.forEach(e=>{
+      if(e.isIntersecting) setActive(map[e.target.id]);
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section.doc-sec').forEach(s=>io.observe(s));
+
+  /* 모바일 목차 토글 */
+  document.getElementById('menuBtn').addEventListener('click', ()=>sidebar.classList.toggle('open'));
+})();
+</script>
+</body>
+</html>

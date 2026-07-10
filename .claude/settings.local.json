@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python --version)",
+      "PowerShell(node --version)",
+      "PowerShell(npx --version)",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/Users/suah37/.claude/settings.json'\\)\\); print\\(type\\(d\\)\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(python3 -c \"import json; json.load\\(open\\('/Users/suah37/.claude/settings.json'\\)\\); print\\('valid JSON ✓'\\)\")",
+      "mcp__claude_ai_Figma__get_screenshot",
+      "mcp__claude_ai_Figma__get_metadata",
+      "mcp__claude_ai_Figma__use_figma"
+    ]
+  }
+}
