@@ -51,7 +51,17 @@ a{text-decoration:none;color:inherit}
 }
 .pt-head .brand{display:flex;align-items:center;font-size:15px;font-weight:600}
 .pt-head .brand small{font-weight:500;color:var(--muted)}
-.pt-head .doc-link{font-size:13.5px;font-weight:600;color:var(--blue)}
+
+.doc-link{
+  position:fixed;left:24px;bottom:24px;z-index:50;
+  display:inline-flex;align-items:center;gap:4px;
+  padding:12px 18px;border-radius:999px;
+  background:#fff;color:var(--blue);font-size:13.5px;font-weight:600;
+  border:1px solid var(--line2);box-shadow:0 8px 20px rgba(2,7,19,.1);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.doc-link:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(2,7,19,.14)}
+@media (max-width:600px){.doc-link{left:16px;bottom:16px;padding:10px 14px;font-size:13px}}
 
 .stage{flex:1;min-height:0;display:flex;flex-direction:column;padding:20px 24px 18px}
 .proto-grid{
@@ -461,8 +471,8 @@ a{text-decoration:none;color:inherit}
 
 <header class="pt-head">
   <div class="brand">회의 시간 잡기&nbsp;<small>· 인터랙티브 프로토타입</small></div>
-  <a class="doc-link" id="backToCase" href="ver2.html">과제로 돌아가기 →</a>
 </header>
+<a class="doc-link" id="backToCase" href="ver2.html">← 과제로 돌아가기</a>
 
 <div class="stage">
   <div class="proto-grid">
