@@ -85,9 +85,12 @@ a{text-decoration:none;color:inherit}
 .prog{display:flex;align-items:center;gap:10px;margin-top:8px}
 .step-count{font-size:13px;font-weight:500;color:var(--muted)}
 .dots{display:flex;gap:5px}
-.dots i{width:7px;height:7px;border-radius:50%;background:#D3D8DF;transition:all .25s}
+.dots i{width:7px;height:7px;border-radius:50%;background:#D3D8DF;transition:all .25s;cursor:pointer}
+.dots i:hover{background:#B7BFC9}
 .dots i.on{background:var(--blue);width:20px;border-radius:4px}
+.dots i.on:hover{background:var(--blue)}
 .dots i.done{background:#A9C6FF}
+.dots i.done:hover{background:#7FA8FF}
 .info-body{flex:1;min-height:0;overflow-y:auto;margin-top:20px;padding-right:6px;scrollbar-width:none}
 .info-body::-webkit-scrollbar{display:none}
 .pinfo{display:none;flex-direction:column;gap:16px}
@@ -950,7 +953,11 @@ a{text-decoration:none;color:inherit}
   const phone=$('#phone');
   const whoBadge=$('#whoBadge'),stepTitle=$('#stepTitle'),stepCount=$('#stepCount');
   const dots=$('#dots');
-  steps.forEach(()=>{const i=document.createElement('i');dots.appendChild(i);});
+  steps.forEach((st,i)=>{
+    const dot=document.createElement('i');
+    dot.addEventListener('click',()=>goTo(i));
+    dots.appendChild(dot);
+  });
   const btnPrev=$('#btnPrev'),btnNext=$('#btnNext');
 
   /* ---------- 토스트 ---------- */
