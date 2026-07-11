@@ -798,21 +798,6 @@ tr.fail td.key{color:var(--text-error)}
                 </div>
               </div>
             </div>
-            <div class="grp">
-              <h3 class="h-sm">검토한 대안</h3>
-              <div class="pgroup">
-                <p class="b-base">같은 문제를 겨냥한 두 가지 대안을 검토한 뒤, <span class="hl">회의가 만들어진 시점에 해당 기간의 응답을 수집해 시스템이 후보를 추천하는 현재 구조</span>를 택했습니다.</p>
-              </div>
-              <div class="tbl tbl-scroll">
-                <table>
-                  <thead><tr><th>검토한 대안</th><th>택하지 않은 이유</th></tr></thead>
-                  <tbody>
-                    <tr><td class="key">비선호 시간 사전 등록<br><span class="b-xs">피하고 싶은 시간을 캘린더에 미리 저장</span></td><td class="hl2">비선호는 고객 미팅 준비처럼 주별 상황에 따라 달라지는 동적 정보라 미리 입력하기 어렵고, 실제 상황과 어긋날 가능성이 큽니다. 회사마다 캘린더 서비스가 다른 점도 고려해, 회의 요청이 생긴 시점에 해당 기간에 대해서만 응답을 수집하는 외부 서비스 구조를 택했습니다.</td></tr>
-                    <tr><td class="key">주최자가 고른 후보로 투표<br><span class="b-xs">후보 3~4개를 먼저 제시하고 가능 여부 수집</span></td><td class="hl2">어떤 후보가 괜찮은지 판단하는 일 자체가 이 문제의 병목이며, 주최자가 더 나은 시간을 놓칠 가능성도 있습니다. 정해진 기간 전체에서 시스템이 후보를 찾아 추천하도록 했습니다.</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -868,6 +853,21 @@ tr.fail td.key{color:var(--text-error)}
                   <div><div class="label">Trade-off 3</div><h4>완벽 ↔ 충분</h4></div>
                   <p>모든 선호를 만족시키는 최적의 선택지보다, 기한 안에 성사되는 "충분히 괜찮은" 후보를 우선했습니다.</p>
                 </div>
+              </div>
+            </div>
+            <div class="grp">
+              <h3 class="h-sm">검토한 대안</h3>
+              <div class="pgroup">
+                <p class="b-base">같은 맞교환 위에서 두 가지 대안을 검토한 뒤, <span class="hl">회의가 만들어진 시점에 해당 기간의 응답을 수집해 시스템이 후보를 추천하는 현재 구조</span>를 택했습니다.</p>
+              </div>
+              <div class="tbl tbl-scroll">
+                <table>
+                  <thead><tr><th>검토한 대안</th><th>택하지 않은 이유</th></tr></thead>
+                  <tbody>
+                    <tr><td class="key">비선호 시간 사전 등록<br><span class="b-xs">피하고 싶은 시간을 캘린더에 미리 저장</span></td><td class="hl2">비선호는 고객 미팅 준비처럼 주별 상황에 따라 달라지는 동적 정보라 미리 입력하기 어렵고, 실제 상황과 어긋날 가능성이 큽니다. 회사마다 캘린더 서비스가 다른 점도 고려해, 회의 요청이 생긴 시점에 해당 기간에 대해서만 응답을 수집하는 외부 서비스 구조를 택했습니다.</td></tr>
+                    <tr><td class="key">주최자가 고른 후보로 투표<br><span class="b-xs">후보 3~4개를 먼저 제시하고 가능 여부 수집</span></td><td class="hl2">어떤 후보가 괜찮은지 판단하는 일 자체가 이 문제의 병목이며, 주최자가 더 나은 시간을 놓칠 가능성도 있습니다. 정해진 기간 전체에서 시스템이 후보를 찾아 추천하도록 했습니다.</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
