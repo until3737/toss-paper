@@ -161,7 +161,7 @@ tr.fail td.key{color:var(--text-error)}
 .card .label{font-size:14px;line-height:20px;font-weight:600;color:var(--text-subtle)}
 .card h4{font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.5px;color:var(--text-default)}
 .card p{font-size:14px;line-height:20px;font-weight:400;color:var(--text-subtle);white-space:pre-line}
-#edge-cases .cards1 .card p{font-size:15px;line-height:22px}
+#edge-cases .cards1 .card p,#observed-case .card p{font-size:15px;line-height:22px}
 #tradeoffs .card p{font-size:15px;line-height:22px}
 #tradeoffs .card .label{margin-bottom:4px}
 .limit-list{display:flex;flex-direction:column;gap:8px;list-style:none}
@@ -466,8 +466,8 @@ tr.fail td.key{color:var(--text-error)}
             <div class="grp">
               <div class="pgroup">
                 <p class="b-base">처음에는 여러 참석자의 빈 시간을 찾는 부담이 핵심이라고 보았습니다. 하지만 캘린더 겹쳐 보기와 일정 투표 등 기존 도구들이 이 단계를 비교적 잘 지원하고 있었습니다.</p>
-                <p class="b-base">그런데 조율 과정을 관찰해 보니 문제는 그 뒤에 있었습니다. <span class="hl">공통 빈 시간을 찾은 뒤에도 주최자는 어느 시간으로 확정해야 할지 판단하기 어려워했고, 확정한 뒤 되돌리는 일</span>도 생기고 있었습니다.
-참석자의 역할, 어려운 사유, 조정 가능성이 섞이면 같은 후보 시간도 단순히 가능/불가능으로 판단하기 어렵기 때문입니다.</p>
+                <p class="b-base">그런데 회의 시간을 조율하는 과정을 관찰해보니 주최자는 <span class="hl">공통 빈 시간을 찾은 뒤에도 어느 시간으로 확정해야 할지 판단하기 어려워했고, 확정한 뒤 되돌리는 일</span>도 생기고 있었습니다.
+참석자의 역할, 어려운 사유, 조정 가능성이 섞이면 같은 후보 시간도 단순히 가능/불가능으로 판단하기 어려웠습니다.</p>
                 <p class="b-base">따라서 빈 시간을 찾는 과정이 아니라, <span class="hl">찾은 후보 중에서 실제로 확정해도 되는 시간을 판단하는 과정</span>을 핵심 문제로 좁혔습니다.</p>
               </div>
             </div>
@@ -481,9 +481,7 @@ tr.fail td.key{color:var(--text-error)}
             <div class="grp">
               <h3 class="h-sm">회의 시간 조율 과정 분석</h3>
               <div class="pgroup">
-                <p class="b-base">기존 캘린더는 일정이 없는 시간을 후보로 보여주지만, <span class="hl">그 시간이 참석자에게 괜찮은 시간인지까지는 알려주지 않습니다.</span></p>
-                <p class="b-base">행동 패턴 분석 중 한 건에서 주최자는 6명 모두 비어 있는 수요일 오후 2시를 선택해 초대를 보냈습니다. 그러나 필수 참석자 한 명은 오후 3시 고객 미팅 준비 때문에 그 시간을 피하고 싶어 했습니다. 캘린더에는 고객 미팅만 등록되어 있어 오후 2시는 가능한 시간으로 표시됐고, 참석자는 참여할 수 있다는 이유로 불가를 표시하기도, 개인 사정을 미리 설명하기도 어려웠습니다.</p>
-                <p class="b-base">결국 참석자는 초대를 받은 뒤 시간 변경을 요청했고, 빠질 수 없는 사람이었기에 <span class="hl">주최자는 초대를 취소한 뒤 다른 후보를 찾고 나머지 참석자의 조건을 다시 확인해야 했습니다.</span> 같은 사정이라도 선택 참석자였다면 그대로 진행했을 일입니다. 관찰한 8건에서 주최자는 이런 상황을 피하기 위해 확정에 이르기까지 아래 항목들을 반복해서 확인하고 있었습니다.</p>
+                <p class="b-base">회의 조율 과정을 관찰한 결과, 주최자는 <span class="hl">공통 빈 시간을 찾은 뒤에도 확정에 이르기까지 아래 항목들을 반복해서 확인</span>하고 있었습니다.</p>
               </div>
               <p class="b-xs src">출처: 주최자가 단체 회의 시간을 결정하는 과정의 사용자 행동 패턴 8건 관찰</p>
               <div class="tbl tbl-scroll">
@@ -499,6 +497,17 @@ tr.fail td.key{color:var(--text-error)}
                     <tr class="fail"><td class="key">-</td><td class="key">실패</td><td>다시 처음으로 돌아가 재조정</td></tr>
                   </tbody>
                 </table>
+              </div>
+              <div class="pgroup">
+                <p class="b-base">기존 캘린더는 일정이 없는 시간을 후보로 보여주지만, <span class="hl">그 시간이 참석자에게 괜찮은 시간인지까지는 알려주지 않습니다.</span> 관찰한 사례 하나가 이 간극을 잘 보여줍니다.</p>
+              </div>
+              <div class="cards1" id="observed-case">
+                <div class="card">
+                  <div><div class="label">관찰 사례</div><h4>모두 비어 있던 수요일 오후 2시</h4></div>
+                  <p>6명의 캘린더가 모두 비어 있었고, 주최자는 그 시간으로 초대를 보냈습니다.</p>
+                  <p>그러나 필수 참석자 한 명은 오후 3시 고객 미팅 준비 때문에 2시를 피하고 싶었습니다. 캘린더에는 미팅만 등록되어 있어 2시는 '가능'으로 표시됐고, 참여할 수는 있으니 불가를 표시할 명분도, 사정을 미리 설명할 방법도 없었습니다.</p>
+                  <p><span class="hl">결국 참석자는 초대를 받은 뒤에야 시간 변경을 요청했고, 빠질 수 없는 사람이었기에 주최자는 초대를 취소하고 다른 후보를 찾아 나머지 참석자의 조건을 다시 확인했습니다.</span> 같은 사정이라도 선택 참석자였다면 그대로 진행했을 일입니다.</p>
+                </div>
               </div>
             </div>
 
@@ -780,22 +789,28 @@ tr.fail td.key{color:var(--text-error)}
           <div class="body">
             <div class="grp">
               <div class="callout">
-                <p>참석자의 세부 조건을 그대로 노출하지 않고, 시스템이 역할과 응답 상태를 분석해
-확정 가능성이 높은 회의 시간을 추천하는 일정 조율 경험</p>
+                <p>주최자의 조건 설정 → 참석자의 응답 수집 → 시스템의 분석·추천,
+세 단계로 확정 판단의 부담을 나누는 일정 조율 경험</p>
               </div>
               <div class="cards3">
                 <div class="card">
-                  <h4 class="b-base-sb" style="color:var(--text-default)">입력</h4>
-                  <p>참석자 역할, 가능 상태, 비선호</p>
+                  <div class="label">01</div>
+                  <h4 class="b-base-sb" style="color:var(--text-default)">주최자의 조건 설정</h4>
+                  <p>회의 길이·진행 기간을 정하고 참석자별 필수/선택 역할 지정</p>
                 </div>
                 <div class="card">
-                  <h4 class="b-base-sb" style="color:var(--text-default)">분석</h4>
-                  <p>시스템이 후보 시간별 적합성 분석</p>
+                  <div class="label">02</div>
+                  <h4 class="b-base-sb" style="color:var(--text-default)">참석자의 응답 수집</h4>
+                  <p>캘린더에 없는 불가·비선호 시간만 입력, 사유는 받지 않음</p>
                 </div>
                 <div class="card">
-                  <h4 class="b-base-sb" style="color:var(--text-default)">결과</h4>
-                  <p>추천 후보와 요약 근거 제공</p>
+                  <div class="label">03</div>
+                  <h4 class="b-base-sb" style="color:var(--text-default)">시스템의 분석·추천</h4>
+                  <p>역할과 응답 강도로 우선순위를 매겨 근거와 함께 추천</p>
                 </div>
+              </div>
+              <div class="pgroup">
+                <p class="b-base">주최자가 회의 길이와 진행 기간을 설정하면 참석자에게 응답 요청이 전달되고, 참석자는 각자 불가능한 시간과 비선호 시간을 입력합니다. 시스템은 모든 응답을 종합해 후보 시간을 분석하고, 우선순위를 매겨 추천합니다.</p>
               </div>
             </div>
           </div>
